@@ -1,0 +1,12 @@
+---
+skills:
+- id: 1
+  title: 'skateboarding '
+  description: kickflips and such
+- id: 2
+  title: 'crushing that code '
+  description: like a boss
+- id: 4
+  title: making art
+  description: painting those paintings
+total: 4
