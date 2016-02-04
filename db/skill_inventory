@@ -1,0 +1,12 @@
+---
+skills:
+- id: 1
+  title: skate
+  description: kickflips and such
+- id: 2
+  title: crush that code
+  description: like a boss
+- id: 3
+  title: paint
+  description: 60s singers
+total: 3

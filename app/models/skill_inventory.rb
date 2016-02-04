@@ -1,6 +1,3 @@
-require 'yaml/store'
-require_relative 'skill'
-
 class SkillInventory
   attr_reader :database
 
@@ -39,14 +36,21 @@ class SkillInventory
     database.transaction do
       target_skill = database['skills'].find { |skill| skill["id"] == id.to_i }
 
-      target_skill["title"] = skill["title"]
-      target_skill["description"] = skill["description"]
+      target_skill["title"] = skill[:title]
+      target_skill["description"] = skill[:description]
     end
   end
 
   def delete(id)
     database.transaction do
       database["skills"].delete_if { |skill| skill["id"] == id }
+    end
+  end
+
+  def delete_all
+    database.transaction do
+      database['skills'] = []
+      database['total'] = 0
     end
   end
 end
