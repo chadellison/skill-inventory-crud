@@ -1,6 +1,6 @@
 require 'bundler'
-Bundler.require #requires everything in your gemfile
 
+Bundler.require #requires everything in your gemfile
 # get the path of the root of the app
 APP_ROOT = File.expand_path("..", __dir__)
 

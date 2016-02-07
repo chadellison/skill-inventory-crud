@@ -6,12 +6,14 @@ class SkillInventory
   end
 
   def create(skill)
-    database.transaction do
-      database['skills'] ||= []
-      database['total'] ||= 0
-      database['total'] += 1
-      database['skills'] << { "id" => database['total'], "title" => skill[:title], "description" => skill[:description] }
-    end
+    dataset.insert(skill)
+    # Skill.new(skill)
+    # database.transaction do
+    #   database['skills'] ||= []
+    #   database['total'] ||= 0
+    #   database['total'] += 1
+    #   database['skills'] << { "id" => database['total'], "title" => skill[:title], "description" => skill[:description] }
+    # end
   end
 
   def raw_skills
@@ -20,8 +22,13 @@ class SkillInventory
     end
   end
 
+  def dataset
+    database.from(:skills)
+  end
+
   def all
-    raw_skills.map { |data| Skill.new(data) }
+    dataset.map { |skill| Skill.new(skill) }
+    # raw_skills.map { |data| Skill.new(data) }
   end
 
   def raw_skill(id)
@@ -29,28 +36,26 @@ class SkillInventory
   end
 
   def find(id)
-    Skill.new(raw_skill(id))
+    # Skill.new(raw_skill(id))
+    data = dataset.detect { |skill_data| skill_data[:id] == id }
+
+    Skill.new(data)
   end
 
   def update(skill, id)
-    database.transaction do
-      target_skill = database['skills'].find { |skill| skill["id"] == id.to_i }
-
-      target_skill["title"] = skill[:title]
-      target_skill["description"] = skill[:description]
-    end
+    dataset.where(:id => id).update(skill)
+    # database.transaction do
+    #   target_skill = database['skills'].find { |skill| skill["id"] == id.to_i }
+    #
+    #   target_skill["title"] = skill[:title]
+    #   target_skill["description"] = skill[:description]
+    # end
   end
 
   def delete(id)
-    database.transaction do
-      database["skills"].delete_if { |skill| skill["id"] == id }
-    end
-  end
-
-  def delete_all
-    database.transaction do
-      database['skills'] = []
-      database['total'] = 0
-    end
+    dataset.where(:id => id).delete(skill)
+    # database.transaction do
+    #   database["skills"].delete_if { |skill| skill["id"] == id }
+    # end
   end
 end

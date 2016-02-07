@@ -1,7 +1,5 @@
-<body>
-  <div class="container">
-    <h1>All Skills</h1>
-
+<h1>All Skills</h1>
+  <div>
     <% @skills.each do |skill| %>
       <h3><%= skill.id %>: <a href="/skills/<%= skill.id %>"><%= skill.title %></a></h3>
       <a href="/skills/<%= skill.id %>/edit">Edit</a>
@@ -12,4 +10,3 @@
       </form>
     <% end %>
   </div>
-</body>

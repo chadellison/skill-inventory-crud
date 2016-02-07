@@ -11,11 +11,11 @@ class SkillInventoryTest < Minitest::Test
 
     skill_inventory.create(data)
 
-    skill = skill_inventory.all.last
+    last_skill = skill_inventory.all.last
 
-    assert skill.id
-    assert_equal "some title", skill.title
-    assert_equal "some description", skill.description
+    assert last_skill.id
+    assert_equal "some title", last_skill.title
+    assert_equal "some description", last_skill.description
   end
 
   def test_it_calls_all_skills
@@ -51,9 +51,19 @@ class SkillInventoryTest < Minitest::Test
       description: "another description"
     }
 
-    skill_inventory.create(data1)
-    skill_inventory.create(data2)
+    skill1_id =  skill_inventory.create(data1)
+    skill2_id = skill_inventory.create(data2)
 
-    assert_equal "another title", skill_inventory.find(2).title
+    assert_equal "some title", skill_inventory.find(skill1_id).title
+    assert_equal "another title", skill_inventory.find(skill2_id).title
+
+    assert_equal "some description", skill_inventory.find(skill1_id).description
+    assert_equal "another description", skill_inventory.find(skill2_id).description
+  end
+
+  def test_it_can_update_a_skill
+  end
+
+  def test_it_can_delete_a_skill
   end
 end

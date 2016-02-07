@@ -1,5 +1,3 @@
-require 'yaml/store'
-
 class SkillInventoryApp < Sinatra::Base
 
   get '/' do
@@ -32,7 +30,7 @@ class SkillInventoryApp < Sinatra::Base
 
   put "/skills/:id" do |id|
     skill_inventory.update(params[:skill], id.to_i)
-    redirect "/skills"
+    redirect "/skills/#{id}"
   end
 
   delete "/skills/:id" do |id|
@@ -46,9 +44,9 @@ class SkillInventoryApp < Sinatra::Base
 
   def skill_inventory
     if ENV["RACK_ENV"] == "test"
-      database = YAML::Store.new('db/skill_inventory_test')
+      database = Sequel.sqlite("db/skill_inventory_test.sqlite3")
     else
-      database = YAML::Store.new('db/skill_inventory')
+      database = Sequel.sqlite("db/skill_inventory_development.sqlite3")
     end
     @skill_inventory ||= SkillInventory.new(database)
   end
