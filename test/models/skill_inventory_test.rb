@@ -75,9 +75,11 @@ class SkillInventoryTest < Minitest::Test
     skill_id = skill_inventory.create(data)
 
     assert_equal "initial skill", skill_inventory.find(skill_id).title
-    assert_equal "initial description", skill_inventory.find(skill_id).title
+    assert_equal "initial description", skill_inventory.find(skill_id).description
 
-    updated_skill = skill_inventory.update(new_data, skill_id)
+    skill_inventory.update(new_data, skill_id)
+
+    updated_skill = skill_inventory.find(skill_id)
 
     assert_equal "new data", updated_skill.title
     assert_equal "new description", updated_skill.description
@@ -85,7 +87,7 @@ class SkillInventoryTest < Minitest::Test
 
   def test_it_can_delete_a_skill
     data = {
-      title:       "skill"
+      title:       "skill",
       description: "description"
     }
 
@@ -99,7 +101,5 @@ class SkillInventoryTest < Minitest::Test
     skill_inventory.delete(skill_id)
 
     assert_equal 0, skill_inventory.all.count
-
-    assert_equal nil, skill_inventory.find(skill_id)
   end
 end
