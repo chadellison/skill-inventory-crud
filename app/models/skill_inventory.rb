@@ -53,7 +53,7 @@ class SkillInventory
   end
 
   def delete(id)
-    dataset.where(:id => id).delete(skill)
+    dataset.where(:id => id).delete
     # database.transaction do
     #   database["skills"].delete_if { |skill| skill["id"] == id }
     # end
