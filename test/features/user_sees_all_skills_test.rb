@@ -1,19 +1,16 @@
-require_relative "../test_helper"
+require_relative '../test_helper'
 
-class UserSeesAllSkillsTest < FeatureTest
-  include TestHelpers
-  def test_user_sees_all_skills
-    data = {
-      title: "skill",
-      description: "description"
-    }
-
-    skill = skill_inventory.create(data)
+class UserSeesAllSkills < FeatureTest
+  def test_can_see_all_tasks
+    skill_inventory.create({
+      title:       "capy's ai abilities",
+      description: "capy can play chess"
+      })
 
     visit "/skills"
 
     within "h3" do
-      assert page.has_content? "skill"
+      assert page.has_content? "capy's ai abilities"
     end
   end
 end

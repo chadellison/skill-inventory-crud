@@ -1,15 +1,19 @@
-require_relative "../test_helper"
+require_relative '../test_helper'
 
-class UserDeletesASkill < FeatureTest
-  def test_user_can_delete_a_skill
-    skill_inventory.create({title: "skateboarding", description: "doing kickflips"})
+class UserDeletesASkillTest < FeatureTest
+  def test_can_delete_a_skill
+
+    id = skill_inventory.create({
+      title:       "capy skills",
+      description: "capy has skills"
+      })
 
     visit "/skills"
 
-    assert page.has_content? "skateboarding"
+    assert page.has_content? "capy skills"
+
     click_button "Delete"
-    within '#skills' do
-      refute page.has_content? "skateboarding"
-    end
+
+    refute page.has_content? "capy skills"
   end
 end

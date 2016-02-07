@@ -3,103 +3,90 @@ require_relative '../test_helper'
 class SkillInventoryTest < Minitest::Test
   include TestHelpers
 
-  def test_can_create_a_skill
-    data = {
-      title:       "some title",
-      description: "some description"
-    }
-
-    skill_inventory.create(data)
-
-    last_skill = skill_inventory.all.last
-
-    assert last_skill.id
-    assert_equal "some title", last_skill.title
-    assert_equal "some description", last_skill.description
+  def create_skills(number)
+    number.times do |num|
+      skill_inventory.create(
+      title: "title#{1 + num}",
+      description: "description#{1 + num}"
+      )
+    end
   end
 
-  def test_it_calls_all_skills
-    data1 = {
-      title:       "some title",
-      description: "some description"
-    }
+  def test_it_can_create_a_skill
+    create_skills(2)
 
-    data2 = {
-      title:       "another title",
-      description: "another description"
-    }
+    assert_equal 2, skill_inventory.all.count
+    skill_inventory.create({
+      title:       "crushing the code",
+      description: "that ruby"
+      })
+    assert_equal 3, skill_inventory.all.count
 
-    skill_inventory.create(data1)
-    skill_inventory.create(data2)
+    created_skill = skill_inventory.all.last
+    assert_equal "crushing the code", created_skill.title
+    assert_equal "that ruby", created_skill.description
+  end
+
+  def test_it_can_display_all_skills
+    create_skills(3)
 
     skills = skill_inventory.all
-    assert_equal Skill, skills.sample.class
-    assert_equal 2, skills.size
 
-    assert_equal "another title", skills.last.title
-    assert_equal "some description", skills.first.description
+    assert_equal Skill, skills.sample.class
+
+    titles = skills.map { |skill| skill.title}
+    descriptions = skills.map { |skill| skill.description }
+
+    assert_equal ["title1", "title2", "title3"], titles
+    assert_equal ["description1", "description2", "description3"], descriptions
   end
 
-  def test_it_can_find_a_skill_by_its_id
-    data1 = {
-      title:       "some title",
-      description: "some description"
-    }
+  def test_it_can_find_a_skill_by_id
+    create_skills(3)
 
-    data2 = {
-      title:       "another title",
-      description: "another description"
-    }
+    skills = skill_inventory.all
 
-    skill1_id =  skill_inventory.create(data1)
-    skill2_id = skill_inventory.create(data2)
+    found_skill = skill_inventory.find(skills.last.id)
 
-    assert_equal "some title", skill_inventory.find(skill1_id).title
-    assert_equal "another title", skill_inventory.find(skill2_id).title
-
-    assert_equal "some description", skill_inventory.find(skill1_id).description
-    assert_equal "another description", skill_inventory.find(skill2_id).description
+    assert_equal Skill, found_skill.class
+    assert_equal "title3", found_skill.title
+    assert_equal "description3", found_skill.description
   end
 
   def test_it_can_update_a_skill
+    create_skills(2)
+
+    skills = skill_inventory.all
+
+    assert_equal 2, skills.count
+
+    assert_equal "title1", skills.first.title
+    assert_equal "description1", skills.first.description
+
     data = {
-      title:       "initial skill",
-      description: "initial description"
+            title: "crushing the code",
+      description: "again and again"
     }
+    skill_inventory.update(data, skills.first.id)
 
-    new_data = {
-      title:       "new data",
-      description: "new description"
-    }
+    assert_equal 2, skills.count
 
-    skill_id = skill_inventory.create(data)
-
-    assert_equal "initial skill", skill_inventory.find(skill_id).title
-    assert_equal "initial description", skill_inventory.find(skill_id).description
-
-    skill_inventory.update(new_data, skill_id)
-
-    updated_skill = skill_inventory.find(skill_id)
-
-    assert_equal "new data", updated_skill.title
-    assert_equal "new description", updated_skill.description
+    assert_equal "crushing the code", skill_inventory.all.first.title
+    assert_equal "again and again", skill_inventory.all.first.description
   end
 
   def test_it_can_delete_a_skill
-    data = {
-      title:       "skill",
-      description: "description"
-    }
+    create_skills(3)
 
-    skill_id = skill_inventory.create(data)
+    skills = skill_inventory.all
 
-    assert_equal 1, skill_inventory.all.count
+    assert_equal 3, skills.count
 
-    assert_equal "skill", skill_inventory.find(skill_id).title
-    assert_equal "description", skill_inventory.find(skill_id).description
+    id = skills[1].id
 
-    skill_inventory.delete(skill_id)
+    skill_inventory.delete(id)
 
-    assert_equal 0, skill_inventory.all.count
+    assert_equal 2, skill_inventory.all.count
+    assert skill_inventory.all.none? { |skill| skill.id == id}
   end
 end

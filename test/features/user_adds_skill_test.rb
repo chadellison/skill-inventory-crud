@@ -1,18 +1,18 @@
 require_relative '../test_helper'
 
 class UserAddsSkillTest < FeatureTest
-  def test_skill_creation_with_valid_attributes
+  def test_user_can_add_skills
     visit "/skills/new"
 
-    fill_in "skill[title]", with: "skateboarding"
-    fill_in "skill[description]", with: "doing kickflips"
+    fill_in "skill[title]", with: "capy's title"
+    fill_in "skill[description]", with: "capy's description"
 
-    click_button "submit"
+    click_button 'submit'
 
-    assert_equal "/skills", current_path
+    assert "/skills", current_path
 
-    within '#skills' do
-      assert page.has_content? 'skateboarding'
+    within "h3" do
+      assert page.has_content? "capy's title"
     end
   end
 end
